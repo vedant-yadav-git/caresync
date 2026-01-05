@@ -1,0 +1,189 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String?
+  name          String?
+  avatarUrl     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  memberships   HouseholdMember[]
+  createdTasks  Task[]            @relation("TaskCreator")
+  assignedTasks Task[]            @relation("TaskAssignee")
+  sentInvites   Invite[]          @relation("InviteSender")
+  sessions      Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// ============================================
+// HOUSEHOLD & MEMBERSHIP
+// ============================================
+
+model Household {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  members HouseholdMember[]
+  tasks   Task[]
+  invites Invite[]
+  notes   HouseholdNote[]
+}
+
+enum MemberRole {
+  OWNER
+  MEMBER
+  VIEWER
+}
+
+model HouseholdMember {
+  id          String     @id @default(cuid())
+  householdId String
+  userId      String
+  role        MemberRole @default(MEMBER)
+  joinedAt    DateTime   @default(now())
+
+  household Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([householdId, userId])
+  @@index([householdId])
+  @@index([userId])
+}
+
+model Invite {
+  id          String    @id @default(cuid())
+  householdId String
+  email       String
+  token       String    @unique @default(cuid())
+  role        MemberRole @default(MEMBER)
+  sentById    String
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  household Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  sentBy    User      @relation("InviteSender", fields: [sentById], references: [id])
+
+  @@index([householdId])
+  @@index([token])
+}
+
+// ============================================
+// TASKS
+// ============================================
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum TaskStatus {
+  OPEN
+  IN_PROGRESS
+  DONE
+}
+
+enum RecurrenceRule {
+  NONE
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+model Task {
+  id             String         @id @default(cuid())
+  householdId    String
+  title          String
+  description    String?
+  priority       TaskPriority   @default(MEDIUM)
+  status         TaskStatus     @default(OPEN)
+  dueAt          DateTime?
+  tags           String[]       @default([])
+  recurrenceRule RecurrenceRule @default(NONE)
+  
+  // Relations
+  createdById    String
+  assignedToId   String?
+  
+  // Timestamps
+  completedAt    DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  // Foreign keys
+  household  Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  createdBy  User      @relation("TaskCreator", fields: [createdById], references: [id])
+  assignedTo User?     @relation("TaskAssignee", fields: [assignedToId], references: [id])
+
+  @@index([householdId])
+  @@index([assignedToId])
+  @@index([status])
+  @@index([dueAt])
+}
+
+// ============================================
+// HOUSEHOLD NOTES
+// ============================================
+
+model HouseholdNote {
+  id          String   @id @default(cuid())
+  householdId String
+  title       String
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  household Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+
+  @@index([householdId])
+}
+
+// ============================================
+// ANALYTICS (for tracking impact)
+// ============================================
+
+model WeeklySummary {
+  id              String   @id @default(cuid())
+  householdId     String
+  weekStarting    DateTime
+  tasksCreated    Int      @default(0)
+  tasksCompleted  Int      @default(0)
+  tasksOverdue    Int      @default(0)
+  completionRate  Float    @default(0)
+  topMissedTags   String[] @default([])
+  createdAt       DateTime @default(now())
+
+  @@unique([householdId, weekStarting])
+  @@index([householdId])
+}
