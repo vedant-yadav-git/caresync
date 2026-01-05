@@ -17,7 +17,7 @@ I built CareSync because I needed a tool that understood real life, not just che
 
 ## Why I Built It
 
-In the summer of 2023, I stood beside my uncle during the funeral rites for my grandfather in Jaipur. I was sixteen and the oldest of my generation, and in that moment I felt the weight of adulthood settle on my shoulders sooner than I expected. Eight weeks later, my uncle also passed away. School had already started in California, so I couldn't return to India.
+In the summer of 2024, I stood beside my uncle during the funeral rites for my grandfather in Jaipur. I was sixteen and the oldest of my generation, and in that moment I felt the weight of adulthood settle on my shoulders sooner than I expected. Eight weeks later, my uncle also passed away. School had already started in California, so I couldn't return to India.
 
 After those losses, my family had to manage responsibilities in both California and Jaipur. My dad began traveling often to India to help relatives and handle business matters. When he was abroad, my mom managed our home while staying involved in decisions overseas. I stepped in to support her—running errands, caring for our dog, keeping the house running so my parents could focus on what only they could handle.
 
@@ -166,8 +166,8 @@ The "health" and "bills" tags get bonus points because those are the categories 
 
 ## Demo
 
-- **Live Site**: [caresync.vercel.app](https://caresync.vercel.app)
-- **Demo Video**: [90-second walkthrough](https://youtube.com/watch?v=demo)
+- **Live Site**: [caresync-ten.vercel.app](https://caresync-ten.vercel.app)
+- **Demo Video**: [90-second walkthrough](https://youtu.be/0ryE9hbtAdc)
 
 ## Getting Started
 
@@ -180,10 +180,10 @@ The "health" and "bills" tags get bonus points because those are the categories 
 ### Installation
 
 1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/caresync.git
+```bash
+   git clone https://github.com/vedant-yadav-git/caresync.git
    cd caresync
-   ```
+```
 
 2. **Install dependencies**
    ```bash
