@@ -16,6 +16,12 @@ export interface User {
   updatedAt: Date;
 }
 
+export interface UserSummary {
+  id: string;
+  email: string;
+  name: string | null;
+}
+
 export interface Household {
   id: string;
   name: string;
@@ -29,7 +35,7 @@ export interface HouseholdMember {
   userId: string;
   role: MemberRole;
   joinedAt: Date;
-  user?: User;
+  user?: User | UserSummary;
   household?: Household;
 }
 
@@ -48,9 +54,9 @@ export interface Task {
   completedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
-  // Relations
-  createdBy?: User;
-  assignedTo?: User | null;
+  // Relations - using UserSummary since we only select id, name, email
+  createdBy?: UserSummary;
+  assignedTo?: UserSummary | null;
 }
 
 export interface Invite {
