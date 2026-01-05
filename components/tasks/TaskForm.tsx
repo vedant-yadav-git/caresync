@@ -47,7 +47,7 @@ export function TaskForm({
 }: TaskFormProps) {
   const [title, setTitle] = useState(task?.title || '');
   const [description, setDescription] = useState(task?.description || '');
-  const [priority, setPriority] = useState(task?.priority || 'MEDIUM');
+  const [priority, setPriority] = useState<string>(task?.priority || 'MEDIUM');
   const [dueAt, setDueAt] = useState(
     task?.dueAt
       ? new Date(task.dueAt).toISOString().slice(0, 16)
@@ -55,7 +55,7 @@ export function TaskForm({
   );
   const [tags, setTags] = useState<string[]>(task?.tags || []);
   const [tagInput, setTagInput] = useState('');
-  const [recurrenceRule, setRecurrenceRule] = useState(
+  const [recurrenceRule, setRecurrenceRule] = useState<string>(
     task?.recurrenceRule || 'NONE'
   );
   const [assignedToId, setAssignedToId] = useState(task?.assignedToId || '');
