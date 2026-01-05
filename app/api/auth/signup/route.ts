@@ -6,17 +6,25 @@ import { signupSchema } from '@/lib/validators';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    const { skipHousehold } = body;
     
-    // Validate input
+    // Validate input (make householdName optional if skipHousehold is true)
     const result = signupSchema.safeParse(body);
-    if (!result.success) {
+    if (!result.success && !skipHousehold) {
       return NextResponse.json(
         { error: result.error.errors[0].message },
         { status: 400 }
       );
     }
 
-    const { email, password, name, householdName } = result.data;
+    const { email, password, name, householdName } = body;
+
+    if (!email || !password || !name) {
+      return NextResponse.json(
+        { error: 'Email, password, and name are required' },
+        { status: 400 }
+      );
+    }
 
     // Check if user exists
     const existingUser = await db.user.findUnique({
@@ -33,7 +41,7 @@ export async function POST(request: NextRequest) {
     // Hash password
     const passwordHash = await hashPassword(password);
 
-    // Create user and household in a transaction
+    // Create user (and optionally household) in a transaction
     const user = await db.$transaction(async (tx) => {
       // Create user
       const newUser = await tx.user.create({
@@ -44,21 +52,24 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // Create household
-      const household = await tx.household.create({
-        data: {
-          name: householdName || `${name}'s Home`,
-        },
-      });
+      // Only create household if not joining via invite
+      if (!skipHousehold) {
+        // Create household
+        const household = await tx.household.create({
+          data: {
+            name: householdName || `${name}'s Home`,
+          },
+        });
 
-      // Add user as owner of household
-      await tx.householdMember.create({
-        data: {
-          userId: newUser.id,
-          householdId: household.id,
-          role: 'OWNER',
-        },
-      });
+        // Add user as owner of household
+        await tx.householdMember.create({
+          data: {
+            userId: newUser.id,
+            householdId: household.id,
+            role: 'OWNER',
+          },
+        });
+      }
 
       return newUser;
     });
