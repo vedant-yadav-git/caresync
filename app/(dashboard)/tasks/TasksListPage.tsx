@@ -6,11 +6,11 @@ import { Plus, CheckSquare } from 'lucide-react';
 import { Button, Modal, EmptyState } from '@/components/ui';
 import { TaskCard, TaskForm, FiltersBar } from '@/components/tasks';
 import { sortBy } from '@/lib/utils';
-import type { Task, User, TaskFilters, TaskSort, CreateTaskInput } from '@/types';
+import type { Task, UserSummary, TaskFilters, TaskSort, CreateTaskInput } from '@/types';
 
 interface TasksListPageProps {
   tasks: Task[];
-  members: User[];
+  members: UserSummary[];
   householdId: string;
 }
 

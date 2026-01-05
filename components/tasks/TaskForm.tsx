@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { X, Plus } from 'lucide-react';
 import { Button, Input, Select, Textarea } from '@/components/ui';
 import { cn, getTagColor } from '@/lib/utils';
-import type { Task, CreateTaskInput, User } from '@/types';
+import type { Task, CreateTaskInput, UserSummary } from '@/types';
 
 interface TaskFormProps {
   task?: Task | null;
-  members?: User[];
+  members?: UserSummary[];
   onSubmit: (data: CreateTaskInput) => void;
   onCancel: () => void;
   loading?: boolean;

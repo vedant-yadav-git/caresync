@@ -15,11 +15,11 @@ import {
 import { Button, Input, Modal, Avatar, Badge } from '@/components/ui';
 import { cn } from '@/lib/utils';
 import { formatTimeAgo } from '@/lib/dates';
-import type { Household, HouseholdMember, Invite, MemberRole, User } from '@/types';
+import type { Household, HouseholdMember, Invite, MemberRole, UserSummary } from '@/types';
 
 interface HouseholdPageClientProps {
   household: Household & {
-    members: (HouseholdMember & { user: User })[];
+    members: (HouseholdMember & { user: UserSummary })[];
     invites: Invite[];
   };
   currentUserId: string;

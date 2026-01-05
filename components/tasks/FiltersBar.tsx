@@ -4,14 +4,14 @@ import { Search, Filter, SortAsc, X } from 'lucide-react';
 import { useState } from 'react';
 import { Button, Select } from '@/components/ui';
 import { cn } from '@/lib/utils';
-import type { TaskFilters, TaskSort, User } from '@/types';
+import type { TaskFilters, TaskSort, UserSummary } from '@/types';
 
 interface FiltersBarProps {
   filters: TaskFilters;
   sort: TaskSort;
   onFiltersChange: (filters: TaskFilters) => void;
   onSortChange: (sort: TaskSort) => void;
-  members?: User[];
+  members?: UserSummary[];
 }
 
 const STATUS_OPTIONS = [

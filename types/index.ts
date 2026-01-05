@@ -16,6 +16,7 @@ export interface User {
   updatedAt: Date;
 }
 
+// Simplified user for task assignments (what we actually select from DB)
 export interface UserSummary {
   id: string;
   email: string;

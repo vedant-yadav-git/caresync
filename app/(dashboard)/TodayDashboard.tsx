@@ -17,7 +17,7 @@ import { Button, Modal } from '@/components/ui';
 import { TaskSection, TaskForm } from '@/components/tasks';
 import { StatsCard } from '@/components/dashboard';
 import { formatPercentage } from '@/lib/utils';
-import type { Task, User, DashboardStats, CreateTaskInput } from '@/types';
+import type { Task, UserSummary, DashboardStats, CreateTaskInput } from '@/types';
 
 interface TodayDashboardProps {
   overdueTasks: Task[];
@@ -25,7 +25,7 @@ interface TodayDashboardProps {
   upcomingTasks: Task[];
   unassignedTasks: Task[];
   stats: DashboardStats;
-  members: User[];
+  members: UserSummary[];
   householdId: string;
   currentUserId: string;
 }
